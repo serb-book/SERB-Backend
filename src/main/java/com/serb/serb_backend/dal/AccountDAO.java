@@ -1,6 +1,13 @@
+/**
+ * General account related operations, this doesn't deal with offering
+ * or any kind of transaction, for those purposes check ClientDAO interface
+ * 
+ * @date Apr17
+ * @author abdullah
+ */
 package com.serb.serb_backend.dal;
 import com.serb.serb_backend.dto.AccountDTO;;
-public interface AccountDAL {
+public interface AccountDAO {
 	/**
 	 * @param username
 	 * @param password
