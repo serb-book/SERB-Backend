@@ -29,7 +29,7 @@ public interface AccountDAL {
 	 */
 	boolean createUser(String token);
 	/**
-	 * 
+	 * update the non null values of Account
 	 * @param tocken
 	 * @param account
 	 * @return
