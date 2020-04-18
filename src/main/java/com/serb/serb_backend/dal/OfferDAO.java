@@ -9,14 +9,29 @@ package com.serb.serb_backend.dal;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.serb.serb_backend.dto.OfferDTO;
+import com.serb.serb_backend.dto.ExchangeDTO;
+import com.serb.serb_backend.dto.RentDTO;
+import com.serb.serb_backend.dto.SellDTO;
 
 public interface OfferDAO {
 	/**
-	 * @param offer
+	 * @param sellingOffer
 	 * @return if operation was done successfully
 	 */
-	boolean addOffer(OfferDTO offer);
+	boolean addSellingOffer(SellDTO sellingOffer);
+	
+	/**
+	 * @param rentingOffer
+	 * @return if operation was done successfully
+	 */
+	boolean addRentingOffer(RentDTO rentingOffer);
+	
+	/**
+	 * @param exchangeOffer
+	 * @return if operation was done successfully
+	 */
+	boolean addExchangingOffer(ExchangeDTO exchangeOffer);
+	
 	
 	/**
 	 * takes an excel file containing offer data then start 
