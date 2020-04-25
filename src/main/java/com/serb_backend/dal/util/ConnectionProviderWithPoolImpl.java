@@ -3,10 +3,11 @@ package com.serb_backend.dal.util;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public class ConnectionProviderWithPoolImpl implements ConnectionProvider{
+public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 	private static HikariConfig config = new HikariConfig();
 	private static HikariDataSource ds;
 
@@ -65,4 +66,13 @@ public class ConnectionProviderWithPoolImpl implements ConnectionProvider{
 		
 	}
 
+	@Override
+	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores)
+			throws SQLException {
+		config.setJdbcUrl(jdbcUrl);
+		config.setUsername(username);
+		config.setPassword(passsword);
+		setMiscDataSourceProperties(numberOfCores);
+		return new HikariDataSource(config);	
+	}
 }

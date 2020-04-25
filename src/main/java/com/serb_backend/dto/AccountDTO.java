@@ -16,15 +16,17 @@ public class AccountDTO {
 	private @Getter long id;
 	private ArrayList<String> phoneNumbers;
 	private String profilePictureURL;
+	private String Email;
 
 	public static AccountDTO random() {
 		AccountDTO account = new AccountDTO();
 
 		Faker faker = new Faker();
 
-		account.id = Long();
+		account.id = Math.abs(Long());
 		account.username = faker.name().firstName();
 		account.password = alphanumeric(8, 12);
+		account.Email = alphanumeric(4, 8) + "@" +  english(4,8) + ".com";
 		account.phoneNumbers = new ArrayList<String>();
 		if (weighedTrue(.9)) {
 			account.phoneNumbers.add(numeric(14));

@@ -19,7 +19,7 @@ public class ClientDTO extends AccountDTO {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		SSN = sSN;
+		this.SSN = sSN;
 		this.address.setCity(city);
 		this.address.setCountry(country);
 		this.address.setGovernment(government);

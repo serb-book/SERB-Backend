@@ -23,7 +23,7 @@ public class BookDTO {
 		BookDTO book = new BookDTO();
 		Faker faker = new Faker();
 
-		book.id = Long();
+		book.id = Math.abs(Long());
 		// book.referenceLink = ;
 		book.description = faker.lorem().paragraph();
 
