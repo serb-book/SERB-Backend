@@ -1,9 +1,14 @@
 package com.serb_backend.dto;
 
+import com.github.javafaker.Faker;
+import static io.qala.datagen.RandomShortApi.*;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 public class ClientDTO extends AccountDTO {
 	private String firstName,lastName;
@@ -46,8 +51,54 @@ public class ClientDTO extends AccountDTO {
 				this.address.setLatitude(latitude);
 				this.address.setLongitude(longitude);
 			}
-	public ClientDTO() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	
+	public ClientDTO() {	}
 
+	public static ClientDTO random(){
+		Faker faker = new Faker();
+
+		AccountDTO acc = AccountDTO.random();
+		ClientDTO client = new ClientDTO();
+
+
+		/* NOTE no casting to child check why
+		Exception in thread "main" java.lang.ClassCastException: com.serb_backend.dto.AccountDTO cannot be cast to com.serb_backend.dto.ClientDTO
+        at com.serb_backend.dto.ClientDTO.random(ClientDTO.java:62)	
+		*/
+
+		client.setUsername(acc.getUsername()); 
+		client.setPassword(acc.getPassword());
+		client.setId(acc.getId());
+		client.setPhoneNumbers(acc.getPhoneNumbers());
+		client.setProfilePictureURL(acc.getProfilePictureURL());
+		client.setEmail(acc.getEmail());
+
+		client.firstName = faker.name().firstName();
+		client.lastName = faker.name().lastName();
+
+		client.SSN = numeric(14);
+		client.address = Address.random();		
+
+		return client; }
+	
+	public static ClientDTO random(AccountDTO acc){
+		Faker faker = new Faker();
+
+		ClientDTO client = new ClientDTO();
+
+		client.setUsername(acc.getUsername()); 
+		client.setPassword(acc.getPassword());
+		client.setId(acc.getId());
+		client.setPhoneNumbers(acc.getPhoneNumbers());
+		client.setProfilePictureURL(acc.getProfilePictureURL());
+		client.setEmail(acc.getEmail());
+
+		client.firstName = faker.name().firstName();
+		client.lastName = faker.name().lastName();
+
+		client.SSN = numeric(14);
+		client.address = Address.random();		
+
+		return client; }
 }
