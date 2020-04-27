@@ -6,6 +6,8 @@ import com.github.javafaker.Faker;
 
 @Data
 class State {
+	// FIXME no images in database for offer table
+	// NOTE should't this be array of images ?
 	private String image;
 	private String text;
 	public State() {}
@@ -15,7 +17,7 @@ class State {
 		this.text = text;
 	}
 
-	public State random(){
+	public static State random(){
 		Faker faker = new Faker();
 		State state = new State();
 		

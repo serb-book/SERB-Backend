@@ -11,10 +11,10 @@ public class OfferDTO {
 	
 	OfferDTO(){}
 
-	public OfferDTO random(){
+	public static OfferDTO random(){
 		OfferDTO offer = new OfferDTO();
 
-		offer.state = new State().random();
+		offer.state = State.random();
 		offer.available = weighedTrue(.9);
 		
 		return offer;

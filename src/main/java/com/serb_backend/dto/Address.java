@@ -9,9 +9,7 @@ public class Address {
 	private String country, city, government, street;
 	private double longitude,latitude;
 	
-	public Address() {
-		// TODO Auto-generated constructor stub
-	}
+	public Address() {	}
 	
 	public static Address random(){
 		Address address = new Address();

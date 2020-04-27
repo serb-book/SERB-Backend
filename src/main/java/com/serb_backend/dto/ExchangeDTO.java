@@ -15,7 +15,7 @@ public class ExchangeDTO {
 	public ExchangeDTO() {
 	}
 	
-	public ExchangeDTO random(OfferDTO offer){
+	public static ExchangeDTO random(OfferDTO offer){
 		Faker faker = new Faker();
 
 

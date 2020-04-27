@@ -20,7 +20,7 @@ public class RentDTO {
 		this.offer = offer;
 	}
 	
-	public RentDTO random(OfferDTO offer){
+	public static RentDTO random(OfferDTO offer){
 		RentDTO rent = new RentDTO();
 		rent.offer = offer;
 
