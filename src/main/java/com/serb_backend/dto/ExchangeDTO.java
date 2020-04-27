@@ -23,6 +23,7 @@ public class ExchangeDTO {
 
 		exchange.offer = new OfferDTO().random();
 
+		exchange.categoriesOfInterest = new ArrayList<String>();
 		if (bool()){
 			exchange.categoriesOfInterest.add(faker.book().genre());
 			if(bool()){exchange.categoriesOfInterest.add(faker.book().genre());}
