@@ -80,12 +80,15 @@ public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 		return new HikariDataSource(config);	
 	}
 
+	@Autowired
+	private Environment env;
+
 	@Bean
 	public DataSource dataSource(){
-		config.setJdbcUrl("jdbc:oracle:thin:@localhost:49161:xe");
-		config.setUsername("book");
-		config.setPassword("book");
-		setMiscDataSourceProperties(6);
+		config.setJdbcUrl(env.getProperty("database.jdbc-url"));
+		config.setUsername(env.getProperty("database.username"));
+		config.setPassword(env.getProperty("database.password"));
+		setMiscDataSourceProperties(Integer.parseInt(env.getProperty("database.hikari.cores")));
 		return new HikariDataSource(config);
 
 	}
