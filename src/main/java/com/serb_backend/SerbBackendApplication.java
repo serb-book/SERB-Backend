@@ -13,8 +13,10 @@ public class SerbBackendApplication {
 		
 		Fill_Data fill_Data = context.getBean(Fill_Data.class);
 		fill_Data.test_connection();
+
 		Environment env= context.getBean(Environment.class);
-		if(env.getProperty("add_test_data") == "true")
+
+		if(env.getProperty("add_test_data").equals("true"))
 			fill_Data.fill_all();       
 	}
 
