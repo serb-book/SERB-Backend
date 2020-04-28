@@ -26,6 +26,10 @@ as official configuration had problem in driver
 ### 3. make sure database is up and running 
 follow instruction at [serb-db](https://github.com/serb-book/serb-db)
 
+### 4. (optional) populate database
+change add_test_data ot true in [application.properties](src/main/resources/application.properties)
+> `add_test_data=true`
+
 ## run spring app
 > ` mvn spring-boot:run`
 * currently there are no controller this will only check connection with database
