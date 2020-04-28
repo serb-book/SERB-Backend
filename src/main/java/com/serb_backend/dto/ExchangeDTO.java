@@ -21,7 +21,7 @@ public class ExchangeDTO {
 
 		ExchangeDTO exchange = new ExchangeDTO();
 
-		exchange.offer = new OfferDTO().random();
+		exchange.offer = OfferDTO.random();
 
 		exchange.categoriesOfInterest = new ArrayList<String>();
 		if (bool()){

@@ -14,6 +14,13 @@ public class ClientDTO extends AccountDTO {
 	private String firstName,lastName;
 	private String SSN;
 	private Address address;
+
+	public String getFullname(){
+		firstName = firstName!=null?firstName:"";
+		lastName = lastName!=null?lastName:"";
+
+		return (firstName + " "  + lastName).trim();
+	}
 	public ClientDTO(String firstName,
 					 String lastName,
 					 String sSN,
