@@ -1,5 +1,6 @@
 package com.serb_backend.dto;
 
+import static io.qala.datagen.RandomShortApi.*;
 import lombok.Data;
 
 @Data
@@ -33,6 +34,13 @@ public class SellDTO{
 		this.price = price;
 		this.offer = offer;
 	}
-	
+ 
+	public static SellDTO random(OfferDTO offer){
+		SellDTO sell = new SellDTO();
+		sell.offer = offer;
+		sell.price = (float)(integer(0,100)/100)+integer(0,500);
+
+		return sell;
+	}
 	
 }

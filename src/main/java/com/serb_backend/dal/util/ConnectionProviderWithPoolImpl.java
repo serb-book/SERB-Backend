@@ -7,6 +7,10 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 	private static HikariConfig config = new HikariConfig();
 	private static HikariDataSource ds;
@@ -74,5 +78,18 @@ public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 		config.setPassword(passsword);
 		setMiscDataSourceProperties(numberOfCores);
 		return new HikariDataSource(config);	
+	}
+
+	@Autowired
+	private Environment env;
+
+	@Bean
+	public DataSource dataSource(){
+		config.setJdbcUrl(env.getProperty("database.jdbc-url"));
+		config.setUsername(env.getProperty("database.username"));
+		config.setPassword(env.getProperty("database.password"));
+		setMiscDataSourceProperties(Integer.parseInt(env.getProperty("database.hikari.cores")));
+		return new HikariDataSource(config);
+
 	}
 }
