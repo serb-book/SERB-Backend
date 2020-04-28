@@ -98,7 +98,8 @@ public class ClientDTO extends AccountDTO {
 		client.lastName = faker.name().lastName();
 
 		client.SSN = numeric(14);
-		client.address = Address.random();		
+		if(weighedTrue(.8))
+			{client.address = Address.random();		}
 
 		return client; }
 }
