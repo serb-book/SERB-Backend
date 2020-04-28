@@ -8,7 +8,7 @@ import static io.qala.datagen.RandomShortApi.*;
 import com.github.javafaker.Faker;
 
 @Data
-class State {
+public class State {
 	// FIXME no images in database for offer table
 	private ArrayList<String> images;
 	private String text;

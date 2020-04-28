@@ -21,7 +21,7 @@ public class ExchangeDTO {
 
 		ExchangeDTO exchange = new ExchangeDTO();
 
-		exchange.offer = OfferDTO.random();
+		exchange.offer = offer;
 
 		exchange.categoriesOfInterest = new ArrayList<String>();
 		if (bool()){
@@ -29,7 +29,7 @@ public class ExchangeDTO {
 			if(bool()){exchange.categoriesOfInterest.add(faker.book().genre());}
 		}
 		
-		exchange.negotiationPrice = integer();
+		exchange.negotiationPrice = Math.abs(integer());
 
 		return exchange;
 	}

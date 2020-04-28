@@ -20,12 +20,12 @@ public class TestDTO_random {
         System.out.println("------------------------");
         System.out.println(ClientDTO.random(AccountDTO.random()));
         System.out.println("------------------------");
-        System.out.println(OfferDTO.random());
+        System.out.println(OfferDTO.random(ClientDTO.random(),BookDTO.random()));
         System.out.println("------------------------");
-        System.out.println(ExchangeDTO.random(OfferDTO.random()));
+        System.out.println(ExchangeDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random())));
         System.out.println("------------------------");
-        System.out.println(RentDTO.random(OfferDTO.random()));
+        System.out.println(RentDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random())));
         System.out.println("------------------------");
-        System.out.println(SellDTO.random(OfferDTO.random()));
+        System.out.println(SellDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random())));
     }
 }
