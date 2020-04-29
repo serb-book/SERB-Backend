@@ -1,10 +1,12 @@
 package com.serb_backend.dal;
 
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import com.serb_backend.dto.BookDTO;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -43,4 +45,23 @@ public class BookDAOimp /* implements BookDAO */ {
     }
 
 
+    private final RowMapper<BookDTO> bookRowMapper = (resultSet, rowNum) -> {
+        BookDTO book = new BookDTO();
+        book.setId(resultSet.getLong("ID"));
+        book.setReferenceLink(resultSet.getString("REFRENCE_LINK"));
+        book.setDescription(resultSet.getString("DESCRIPTION"));
+        // book.setAuthors(resultSet.getString(columnLabel));
+        book.setISBN(resultSet.getString("ISBN"));
+        book.setTitle(resultSet.getString("TITLE"));
+        // book.setImage(resultSet.getString(columnLabel));
+    
+        return book;
+    };
+    
+    public List<BookDTO> findAllBooks(){
+
+        return this.namedParameterJdbcTemplate.query(
+            "SELECT ID , REFRENCE_LINK, DESCRIPTION, ISBN, TITLE from BOOK ", bookRowMapper);
+            //TODO select authors,images
+    }
 }

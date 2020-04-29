@@ -17,7 +17,7 @@ public class BookDTO {
 	private String title;
 	private String image;
 	
-	BookDTO(){}
+	public BookDTO(){}
 	
 	public static BookDTO random() {
 		BookDTO book = new BookDTO();
