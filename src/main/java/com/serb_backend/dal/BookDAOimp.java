@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 
 import com.serb_backend.dto.BookDTO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Repository;
 public class BookDAOimp /* implements BookDAO */ {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+    @Autowired
     public BookDAOimp(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         
