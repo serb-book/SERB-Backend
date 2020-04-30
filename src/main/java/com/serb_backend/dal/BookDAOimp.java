@@ -1,5 +1,6 @@
 package com.serb_backend.dal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -24,7 +25,7 @@ public class BookDAOimp /* implements BookDAO */ {
         
     }
     
-    public void addBook(BookDTO book){
+    public boolean addBook(BookDTO book){
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(book);
         // try {
         this.namedParameterJdbcTemplate.update(
@@ -43,6 +44,7 @@ public class BookDAOimp /* implements BookDAO */ {
         // System.out.println(book);
         // System.out.println(e);
         // }
+        return true;
     }
 
 
@@ -51,7 +53,14 @@ public class BookDAOimp /* implements BookDAO */ {
         book.setId(resultSet.getLong("ID"));
         book.setReferenceLink(resultSet.getString("REFRENCE_LINK"));
         book.setDescription(resultSet.getString("DESCRIPTION"));
-        // book.setAuthors(resultSet.getString(columnLabel));
+        
+        String authors[] = resultSet.getString("authors").split(",");
+        ArrayList<String> authors_list = new ArrayList<String>();
+        for (String author : authors) {
+            authors_list.add(author);
+        }
+        book.setAuthors(authors_list);
+        
         book.setISBN(resultSet.getString("ISBN"));
         book.setTitle(resultSet.getString("TITLE"));
         // book.setImage(resultSet.getString(columnLabel));
@@ -59,10 +68,46 @@ public class BookDAOimp /* implements BookDAO */ {
         return book;
     };
     
+    public String select_books(String fillter){
+
+        return 
+            "SELECT b.ID , b.REFRENCE_LINK, b.DESCRIPTION, b.ISBN, b.TITLE,\n"+
+            " LISTAGG(b_a.NAME, ',') WITHIN GROUP (ORDER BY b_a.NAME) \"authors\"\n"+
+            " from book b\n"+
+            " inner join book_authores b_a on b.id = b_a.id\n"+
+            fillter +
+            " GROUP BY b.ID , b.REFRENCE_LINK, b.DESCRIPTION, b.ISBN, b.TITLE\n";
+    }        
+
     public List<BookDTO> findAllBooks(){
 
         return this.namedParameterJdbcTemplate.query(
-            "SELECT ID , REFRENCE_LINK, DESCRIPTION, ISBN, TITLE from BOOK ", bookRowMapper);
-            //TODO select authors,images
+            select_books(""),
+            bookRowMapper);
+    }
+
+	// @Override
+	public List<BookDTO> findBookByAuthor(String author) {
+
+        return this.namedParameterJdbcTemplate.query(
+            select_books(" WHERE LOWER(authors) like LOWER(\'%"+author+"%\')")
+            , bookRowMapper);
+    }
+
+    public List<BookDTO> findBookByTitle(String title) {
+
+        System.out.println(select_books(" WHERE LOWER(b.TITLE) like LOWER(\'%s"+title+"%s\')"));
+        return this.namedParameterJdbcTemplate.query(
+            select_books(" WHERE LOWER(b.TITLE) like LOWER(\'%"+title+"%\')")
+            , bookRowMapper);
+    }
+
+    List<BookDTO> findBookByCategory(String categoryName){
+        // FIXME no relation bertwean book and catagories
+        // MapSqlParameterSource namedParameters = new MapSqlParameterSource("categoryName", categoryName);
+        // return this.namedParameterJdbcTemplate.query(
+        //     select_books+ " WHERE LOWER(b.TITLE) like \"%sLOWER(:categoryName)%s\""
+        //     ,namedParameters, bookRowMapper);
+        return null;
     }
 }

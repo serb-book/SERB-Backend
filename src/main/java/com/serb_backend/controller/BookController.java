@@ -10,6 +10,7 @@ import com.serb_backend.dto.BookDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +33,22 @@ public class BookController {
         List<BookDTO> books = book_repo.findAllBooks();
         return om.writeValueAsString(books);  
         
+    }
+
+    @GetMapping("/book/author/{author_name}")
+    public String getBookByAuthor(@PathVariable String author_name)
+    throws JsonProcessingException {
+		ObjectMapper om = new ObjectMapper();
+        List<BookDTO> books = book_repo.findBookByAuthor(author_name);
+        return om.writeValueAsString(books);  
+    }
+
+    @GetMapping("/book/title/{title}")
+    public String getBookByTitle(@PathVariable String title)
+    throws JsonProcessingException {
+        ObjectMapper om = new ObjectMapper();
+        List<BookDTO> books = book_repo.findBookByTitle(title);
+        return om.writeValueAsString(books);  
     }
 
 }
