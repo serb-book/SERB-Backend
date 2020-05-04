@@ -6,6 +6,10 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.serb_backend.dto.BookDTO;
+import com.serb_backend.dto.ExchangeDTO;
+import com.serb_backend.dto.OfferDTO;
+import com.serb_backend.dto.RentDTO;
+import com.serb_backend.dto.SellDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,20 +67,84 @@ public class BookDAOimp /* implements BookDAO */ {
         
         book.setISBN(resultSet.getString("ISBN"));
         book.setTitle(resultSet.getString("TITLE"));
+
+        
+        
+        //offers 
+        //TODO add rest of offer properties
+        String offers_id_list[] = resultSet.getString("offer_id").split(",");
+        String offers_type_list[] = resultSet.getString("offer_type").split(",");
+        String offers_price_list[] = resultSet.getString("offer_price").split(",");
+
+        ArrayList<RentDTO> rent_offers = new ArrayList<RentDTO>();
+        ArrayList<ExchangeDTO> exchange_offers = new ArrayList<ExchangeDTO>();
+        ArrayList<SellDTO> sell_offers = new ArrayList<SellDTO>();
+        
+        for (int i = 0; i < offers_id_list.length; i++) {
+            try {
+                Long offer_id = Long.parseLong(offers_id_list[i]);
+                Integer offer_type = Integer.parseInt(offers_type_list[i]);
+                Integer offer_price = Integer.parseInt(offers_type_list[i]);
+
+                OfferDTO offer = new OfferDTO();
+                offer.setId(offer_id);
+                // offer.setState(state);
+
+                switch (offer_type){
+                    case 0: //sell
+                        SellDTO sellDTO = new SellDTO();
+                        sellDTO.setOffer(offer);
+                        sell_offers.add(sellDTO);        
+                        break;
+                    case 1: //exchange
+                        ExchangeDTO exchangeDTO = new ExchangeDTO();
+                        exchangeDTO.setOffer(offer);
+                        exchange_offers.add(exchangeDTO);
+                        break;
+                    case 2: //rent
+                        RentDTO rentDTO = new RentDTO();
+                        rentDTO.setOffer(offer);
+                        rent_offers.add(rentDTO);
+                        break;
+                    default:
+                        break;
+                    }
+            } catch (Exception e) {
+                //TODO: handle exception
+                // offer_type not valid only accept 0,1,2
+                // offer doesn't exist offer_type null
+            }
+        }
+        book.setRent_offers(rent_offers);
+        book.setExchange_offers(exchange_offers);
+        book.setSell_offers(sell_offers);
+
+        
+
+
+
         // book.setImage(resultSet.getString(columnLabel));
     
         return book;
     };
     
     public String select_books(String fillter){
-
+    /*
+    book_all view:
+        ID
+        REFRENCE_LINK
+        DESCRIPTION
+        ISBN
+        TITLE
+        AUTHORS
+        OFFER_ID
+        OFFER_TYPE
+        OFFER_PRICE
+    */
         return 
-            "SELECT b.ID , b.REFRENCE_LINK, b.DESCRIPTION, b.ISBN, b.TITLE,\n"+
-            " LISTAGG(b_a.NAME, ',') WITHIN GROUP (ORDER BY b_a.NAME) \"authors\"\n"+
-            " from book b\n"+
-            " inner join book_authores b_a on b.id = b_a.id\n"+
-            fillter +
-            " GROUP BY b.ID , b.REFRENCE_LINK, b.DESCRIPTION, b.ISBN, b.TITLE\n";
+            "SELECT * \n"+
+            " from book_all \n"+
+            fillter;    
     }        
 
     public List<BookDTO> findAllBooks(){
@@ -96,9 +164,8 @@ public class BookDAOimp /* implements BookDAO */ {
 
     public List<BookDTO> findBookByTitle(String title) {
 
-        System.out.println(select_books(" WHERE LOWER(b.TITLE) like LOWER(\'%s"+title+"%s\')"));
         return this.namedParameterJdbcTemplate.query(
-            select_books(" WHERE LOWER(b.TITLE) like LOWER(\'%"+title+"%\')")
+            select_books(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\')")
             , bookRowMapper);
     }
 

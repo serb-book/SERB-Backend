@@ -12,7 +12,7 @@ public class OfferDTO {
 	private ClientDTO client;
 	private BookDTO book;
 	
-	OfferDTO(){}
+	public OfferDTO(){}
 
 	public static OfferDTO random(ClientDTO client, BookDTO book){
 		OfferDTO offer = new OfferDTO();

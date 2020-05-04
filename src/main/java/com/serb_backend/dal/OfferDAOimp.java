@@ -65,7 +65,7 @@ public class OfferDAOimp implements OfferDAO {
 
     @Override
     public boolean addRentingOffer(RentDTO rentingOffer) {
-        addOffer(rentingOffer.getOffer(), 2); //exchange type is 1 commented at database
+        addOffer(rentingOffer.getOffer(), 2); //rent type is 2 commented at database
 
         Map<String, Object> rentingOfferParameters =new ObjectMapper().convertValue(rentingOffer, Map.class);
         rentingOfferParameters.put("id", rentingOffer.getOffer().getId());
@@ -82,7 +82,7 @@ public class OfferDAOimp implements OfferDAO {
 
     @Override
     public boolean addSellingOffer(SellDTO sellingOffer) {
-        addOffer(sellingOffer.getOffer(), 0); //exchange type is 1 commented at database
+        addOffer(sellingOffer.getOffer(), 0); //sell type is 0 commented at database
 
         Map<String, Object> sellingOfferParameters =new ObjectMapper().convertValue(sellingOffer, Map.class);
         sellingOfferParameters.put("id", sellingOffer.getOffer().getId());

@@ -1,6 +1,8 @@
 package com.serb_backend.dto;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static io.qala.datagen.RandomShortApi.*;
 import com.github.javafaker.Faker;
 
@@ -16,6 +18,10 @@ public class BookDTO {
 	private String ISBN;
 	private String title;
 	private String image;
+	private List<ExchangeDTO> exchange_offers;
+	private List<SellDTO> sell_offers;
+	private List<RentDTO> rent_offers;
+
 	
 	public BookDTO(){}
 	
