@@ -1,6 +1,7 @@
 package com.serb_backend.controller;
 // package com.springboot.security.api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,43 +13,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/book")
 public class BookController {
     
     
     private BookDAOimp book_repo;
+    private ObjectMapper objectMapper;
 
 
     @Autowired
     BookController(BookDAOimp book_repo){
         this.book_repo = book_repo;
+        this.objectMapper = new ObjectMapper();
     }
     
-    @GetMapping("/books")
+    @GetMapping("/all")
     public String getAllBooks() throws JsonProcessingException {
-        ObjectMapper om = new ObjectMapper();
         List<BookDTO> books = book_repo.findAllBooks();
-        return om.writeValueAsString(books);  
+        return objectMapper.writeValueAsString(books);  
         
     }
 
-    @GetMapping("/book/author/{author_name}")
-    public String getBookByAuthor(@PathVariable String author_name)
+
+    @GetMapping("/search")
+    public String getBooksByTitleOrAuthor(@RequestParam(required = false) String title,@RequestParam(required = false) String author)
     throws JsonProcessingException {
-		ObjectMapper om = new ObjectMapper();
-        List<BookDTO> books = book_repo.findBookByAuthor(author_name);
-        return om.writeValueAsString(books);  
+        
+        List<BookDTO> books = new ArrayList<BookDTO>();
+        
+        if(title != null && author == null)
+            books.addAll(book_repo.findBookByTitle(title));
+        else if(author != null && title == null)
+            books.addAll(book_repo.findBookByAuthor(author));
+        else if(author != null && title != null)
+            books.addAll(book_repo.findBookByTitleAndAuthor(title, author));
+        
+        return objectMapper.writeValueAsString(books);  
     }
 
-    @GetMapping("/book/title/{title}")
-    public String getBookByTitle(@PathVariable String title)
-    throws JsonProcessingException {
-        ObjectMapper om = new ObjectMapper();
-        List<BookDTO> books = book_repo.findBookByTitle(title);
-        return om.writeValueAsString(books);  
+    @GetMapping("/id/{book_id}")
+    public String findBookById(@PathVariable Long book_id) throws JsonProcessingException{
+        return objectMapper.writeValueAsString(book_repo.findBookByID(book_id));
     }
-
+    
+    @GetMapping("/isbn/{book_isbn}")
+    public String findBookByIsbn(@PathVariable String book_isbn) throws JsonProcessingException{
+        return objectMapper.writeValueAsString(book_repo.findBookByIsbn(book_isbn));
+    }
 }

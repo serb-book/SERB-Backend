@@ -128,7 +128,7 @@ public class BookDAOimp /* implements BookDAO */ {
         return book;
     };
     
-    public String select_books(String fillter){
+    public String select_books_query(String fillter){
     /*
     book_all view:
         ID
@@ -150,7 +150,7 @@ public class BookDAOimp /* implements BookDAO */ {
     public List<BookDTO> findAllBooks(){
 
         return this.namedParameterJdbcTemplate.query(
-            select_books(""),
+            select_books_query(""),
             bookRowMapper);
     }
 
@@ -158,17 +158,23 @@ public class BookDAOimp /* implements BookDAO */ {
 	public List<BookDTO> findBookByAuthor(String author) {
 
         return this.namedParameterJdbcTemplate.query(
-            select_books(" WHERE LOWER(authors) like LOWER(\'%"+author+"%\')")
+            select_books_query(" WHERE LOWER(authors) like LOWER(\'%"+author+"%\')")
             , bookRowMapper);
     }
 
     public List<BookDTO> findBookByTitle(String title) {
 
         return this.namedParameterJdbcTemplate.query(
-            select_books(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\')")
+            select_books_query(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\')")
             , bookRowMapper);
     }
 
+    public List<BookDTO> findBookByTitleAndAuthor(String title,String author) {
+
+        return this.namedParameterJdbcTemplate.query(
+            select_books_query(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\') and LOWER(authors) like LOWER(\'%"+author+"%\')")
+            , bookRowMapper);
+    }
     List<BookDTO> findBookByCategory(String categoryName){
         // FIXME no relation bertwean book and catagories
         // MapSqlParameterSource namedParameters = new MapSqlParameterSource("categoryName", categoryName);
@@ -177,4 +183,19 @@ public class BookDAOimp /* implements BookDAO */ {
         //     ,namedParameters, bookRowMapper);
         return null;
     }
+
+    public BookDTO findBookByID(long id){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+
+        return this.namedParameterJdbcTemplate.queryForObject(
+            select_books_query("where id = :id"), namedParameters,  bookRowMapper);
+    }
+
+    public BookDTO findBookByIsbn(String isbn){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("isbn", isbn);
+
+        return this.namedParameterJdbcTemplate.queryForObject(
+            select_books_query("where isbn = :isbn"), namedParameters,  bookRowMapper);
+    }
+    
 }
