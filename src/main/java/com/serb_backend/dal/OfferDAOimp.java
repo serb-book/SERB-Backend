@@ -182,6 +182,34 @@ public class OfferDAOimp implements OfferDAO {
         return offer;
     };
     
+
+    public Map<String,Object> getOffersByBookId(long id){
+        Map<String,Object> offers = new HashMap<String,Object>();
+
+        
+        String sql = "select * from offer_full where book_id = :book_id and type = :type";
+        
+        for (OfferDTO.type type : OfferDTO.type.values()) {
+            MapSqlParameterSource namedParameters = new MapSqlParameterSource("book_id", id);
+            namedParameters.addValue("type", type.ordinal());
+            switch (type) {
+                case exchange:
+                    List<ExchangeDTO> exchange = this.namedParameterJdbcTemplate.query(sql, namedParameters, exchangeRowMapper);
+                    offers.put("exchange",exchange);
+                case sell:
+                    List<SellDTO> sell = this.namedParameterJdbcTemplate.query(sql, namedParameters, sellRowMapper);
+                    offers.put("sell",sell);
+                case rent:
+                    List<RentDTO> rent = this.namedParameterJdbcTemplate.query(sql, namedParameters, rentRowMapper);
+                    offers.put("rent",rent);
+                default:
+                    break;
+            }   
+        }
+        return offers;
+    }
+
+
     public Object findOfferById(long id){
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         int type_num = this.namedParameterJdbcTemplate.queryForObject(
