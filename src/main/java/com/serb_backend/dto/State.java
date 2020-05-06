@@ -32,7 +32,7 @@ public class State {
 				state.images.add("https://picsum.photos/200/300?random=1"); 
 			}
 		}
-		state.text = faker.lorem().paragraph();
+		state.text = faker.lorem().characters(20,200);
 
 		return state;
 

@@ -16,7 +16,7 @@ public class SellDTO{
 	 * (What if i want to edit the offer content i will 
 	 * have to edit the constructor of every
 	 * Sub-class
-	 * See composition v.s. inheritance for more discussion
+	 * See composition vs inheritance for more discussion
 	 * about that topic
 	 * 
 	 * public SellDTO(float price,

@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
-    
+   
+    //TODO test get for those
     
     private BookDAOimp book_repo;
     private ObjectMapper objectMapper;
@@ -31,9 +32,18 @@ public class BookController {
         this.objectMapper = new ObjectMapper();
     }
     
-    @GetMapping("/all")
-    public String getAllBooks() throws JsonProcessingException {
-        List<BookDTO> books = book_repo.findAllBooks();
+    /** 
+     * return list of books with authors
+     * //TODO use paging 
+    */
+    @GetMapping("")
+    public String getAllBooks(@RequestParam(required = false) Integer rowNum,
+    		@RequestParam(required = false) Integer pageIndex) throws JsonProcessingException {
+    	List<BookDTO> books = new ArrayList<BookDTO>();
+    	if(pageIndex == null)
+        	 books = book_repo.findAllBooks();
+    	else
+    		books =  book_repo.findAllBooks(rowNum,pageIndex);
         return objectMapper.writeValueAsString(books);  
         
     }

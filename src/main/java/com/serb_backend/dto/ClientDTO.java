@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)  //TODO Why do we need this function?
+@EqualsAndHashCode(callSuper = false) //TODO Why do we need this function?
 public class ClientDTO extends AccountDTO {
 	private String firstName,lastName;
 	private String SSN;

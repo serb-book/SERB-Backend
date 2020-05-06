@@ -22,7 +22,8 @@ public class TestDTO_random {
         System.out.println("------------------------");
         System.out.println(OfferDTO.random(ClientDTO.random(),BookDTO.random()));
         System.out.println("------------------------");
-        System.out.println(ExchangeDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random())));
+        //FIXME
+//        System.out.println(ExchangeDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random()),));
         System.out.println("------------------------");
         System.out.println(RentDTO.random(OfferDTO.random(ClientDTO.random(),BookDTO.random())));
         System.out.println("------------------------");

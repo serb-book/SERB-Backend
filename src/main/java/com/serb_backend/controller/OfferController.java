@@ -35,4 +35,12 @@ public class OfferController {
         
         return objectMapper.writeValueAsString(offer_repo.findOfferById(id));
     }
+
+
+    @GetMapping("/book_id/{id}")
+    public String findOfferByBookId(@PathVariable long id)
+    throws JsonProcessingException{
+        
+        return objectMapper.writeValueAsString(offer_repo.getOffersByBookId(id));
+    }
 }

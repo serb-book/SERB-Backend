@@ -2,6 +2,7 @@ package com.serb_backend;
 
 import javax.sql.DataSource;
 
+import com.serb_backend.dal.AccountDAO;
 import com.serb_backend.dal.AccountDAOimp;
 import com.serb_backend.dal.BookDAOimp;
 import com.serb_backend.dal.ClientDAOimp;
@@ -25,33 +26,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class Fill_Data {
+public class FillData {
 
     private DataSource dataSource;
     
     
     @Autowired
-    public Fill_Data(DataSource dataSource){ 
+    public FillData(DataSource dataSource){ 
         this.dataSource = dataSource;
     }
     
     private void fillOffers(ArrayList<ClientDTO> clients , ArrayList<BookDTO> books){
 
-        OfferDAO offer_repo = new OfferDAOimp(dataSource);
+        OfferDAO offerRepo = new OfferDAOimp(dataSource);
 
         for (ClientDTO client : clients) {
-            List<BookDTO> offered_books = sampleMultiple(integer(0,10),books);
-            for (BookDTO book : offered_books) {
+            List<BookDTO> offeredBooks = sampleMultiple(integer(0,10),books);
+            for (BookDTO book : offeredBooks) {
                 OfferDTO offer = OfferDTO.random(client, book);
                 switch (integer(1, 3)) {
                     case 1:
-                        offer_repo.addExchangingOffer(ExchangeDTO.random(offer));
+                        offerRepo.addExchangingOffer(ExchangeDTO.random(offer,offeredBooks.subList(0, offeredBooks.size()/2)));
                         break;
                     case 2:
-                        offer_repo.addRentingOffer(RentDTO.random(offer));
+                        offerRepo.addRentingOffer(RentDTO.random(offer));
                         break;
                     case 3:
-                        offer_repo.addSellingOffer(SellDTO.random(offer));
+                        offerRepo.addSellingOffer(SellDTO.random(offer));
                         break;                    
                     default:
                         break;
@@ -60,34 +61,33 @@ public class Fill_Data {
         }
     }
     
-    private ArrayList<AccountDTO> fill_accounts(int numb){
-        /* add acoount to database with 80% admins */
+    private ArrayList<AccountDTO> fillAccounts(int numb){
         
-        AccountDAOimp acount_repo =new AccountDAOimp(dataSource);
+        AccountDAO acountRepo =new AccountDAOimp(dataSource);
 
         ArrayList<AccountDTO> accounts= new ArrayList<>();
         for (int i = 0; i < numb; i++) {
             AccountDTO account = AccountDTO.random();
-            acount_repo.save(account);
+            acountRepo.saveAccount(account);
             
             accounts.add(account);       
             if(weighedTrue(.8))
-            { acount_repo.saveSuperUser(account.getId());}
+            { acountRepo.grantSuperUserPriviliges(account.getId());}
         }
         return accounts;
     }
     
-    private ArrayList<ClientDTO> fill_clients(int numb){
-        AccountDAOimp acount_repo = new AccountDAOimp(dataSource);
-        ClientDAOimp client_repo = new ClientDAOimp(dataSource);
+    private ArrayList<ClientDTO> fillClients(int numb){
+        AccountDAOimp acountRepo = new AccountDAOimp(dataSource);
+        ClientDAOimp clientRepo = new ClientDAOimp(dataSource);
 
         ArrayList<ClientDTO> clients = new ArrayList<>();
         for (int i = 0; i < numb; i++) {
             AccountDTO account = AccountDTO.random();
-            acount_repo.save(account);
+            acountRepo.saveAccount(account);
 
             ClientDTO client = ClientDTO.random(account);
-            client_repo.save(client);
+            clientRepo.save(client);
 
             clients.add(client);
         }
@@ -95,35 +95,35 @@ public class Fill_Data {
     }
 
 
-    private ArrayList<BookDTO> fill_books(int numb){
-        BookDAOimp book_repo = new BookDAOimp(dataSource);
+    private ArrayList<BookDTO> fillBooks(int numb){
+        BookDAOimp bookRepo = new BookDAOimp(dataSource);
         ArrayList<BookDTO> books = new ArrayList<>();
 
         for (int i = 0; i < numb; i++) {
             BookDTO book = BookDTO.random();
-            book_repo.addBook(book);
+            bookRepo.addBook(book);
 
             books.add(book);
         }
         return books;
     }
 
-    public void test_connection(){
+    public void testConnection(){
 
         hiDAO hi = new hiDAO(dataSource);
         System.out.println(hi.sayhi()); 
         
     }
 
-    public void fill_all() {
+    public void fillAll() {
 
-        fill_accounts(10); //as only admins
+        fillAccounts(10); //as only admins
         System.out.println("admins added");
 
-        ArrayList<ClientDTO> clients = fill_clients(20);
+        ArrayList<ClientDTO> clients = fillClients(20);
         System.out.println("clients added");
 
-        ArrayList<BookDTO> books =  fill_books(40);
+        ArrayList<BookDTO> books =  fillBooks(40);
         System.out.println("books added");
 
         fillOffers(clients, books);

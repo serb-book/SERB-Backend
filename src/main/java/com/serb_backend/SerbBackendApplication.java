@@ -1,9 +1,5 @@
 package com.serb_backend;
 
-import java.util.List;
-
-import com.serb_backend.dal.BookDAOimp;
-import com.serb_backend.dto.BookDTO;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,13 +13,13 @@ public class SerbBackendApplication {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(SerbBackendApplication.class, args);
 		
-		Fill_Data fill_Data = context.getBean(Fill_Data.class);
-		fill_Data.test_connection();
+		FillData fillData = context.getBean(FillData.class);
+		fillData.testConnection();
 
 		Environment env= context.getBean(Environment.class);
 
-		if(env.getProperty("add_test_data").equals("true"))
-			fill_Data.fill_all();       
+		if(env.getProperty("add_test_data").equalsIgnoreCase("true"))
+			fillData.fillAll();       
 	}
 
 }

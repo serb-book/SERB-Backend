@@ -36,11 +36,11 @@ public class ClientDAOimp {
     public void save(ClientDTO client){
         
   
-        Map<String, Object> client_parameters =new ObjectMapper().convertValue(client, Map.class);
+        Map<String, Object> clientParameters =new ObjectMapper().convertValue(client, Map.class);
   
         this.namedParameterJdbcTemplate.update(
             "INSERT INTO CLIENT VALUES (:fullname , :ssn, :id)"
-            , client_parameters);
+            , clientParameters);
         
         if (client.getAddress() != null){
             saveAddress(client.getId(), client.getAddress());

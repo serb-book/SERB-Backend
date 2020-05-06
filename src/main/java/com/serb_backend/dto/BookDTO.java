@@ -1,8 +1,8 @@
 package com.serb_backend.dto;
 
-import java.util.ArrayList;
+import java.util.Set;
 import java.util.List;
-
+import java.util.HashSet;
 import static io.qala.datagen.RandomShortApi.*;
 import com.github.javafaker.Faker;
 
@@ -14,13 +14,10 @@ public class BookDTO {
 	private long id;
 	private String referenceLink;
 	private String description;
-	private ArrayList<String> authors;
+	private Set<String> authors;
 	private String ISBN;
 	private String title;
 	private String image;
-	private List<ExchangeDTO> exchange_offers;
-	private List<SellDTO> sell_offers;
-	private List<RentDTO> rent_offers;
 
 	
 	public BookDTO(){}
@@ -33,7 +30,7 @@ public class BookDTO {
 		// book.referenceLink = ;
 		book.description = faker.lorem().paragraph();
 
-		book.authors = new ArrayList<String>();
+		book.authors = new HashSet<String>();
 		if(weighedTrue(.9)){
 			book.authors.add(faker.book().author());
 			if (bool()){
