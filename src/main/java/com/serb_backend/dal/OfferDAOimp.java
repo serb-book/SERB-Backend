@@ -1,18 +1,26 @@
 package com.serb_backend.dal;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.serb_backend.dto.BookDTO;
+import com.serb_backend.dto.ClientDTO;
 import com.serb_backend.dto.ExchangeDTO;
 import com.serb_backend.dto.OfferDTO;
 import com.serb_backend.dto.RentDTO;
 import com.serb_backend.dto.SellDTO;
+import com.serb_backend.dto.State;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -48,7 +56,7 @@ public class OfferDAOimp implements OfferDAO {
         Map<String, Object> exchangeOfferParameters =new ObjectMapper().convertValue(exchangeOffer, Map.class);
         exchangeOfferParameters.put("id", exchangeOffer.getOffer().getId());
 
-        addOffer(exchangeOffer.getOffer(), 1); //exchange type is 1 commented at database
+        addOffer(exchangeOffer.getOffer(), OfferDTO.type.exchange.ordinal()); //exchange type is 1 commented at database
         
         this.namedParameterJdbcTemplate.update(
             "INSERT INTO OFFER_EXCHANGE VALUES (:id, :negotiationPrice)", exchangeOfferParameters);
@@ -65,7 +73,7 @@ public class OfferDAOimp implements OfferDAO {
 
     @Override
     public boolean addRentingOffer(RentDTO rentingOffer) {
-        addOffer(rentingOffer.getOffer(), 2); //rent type is 2 commented at database
+        addOffer(rentingOffer.getOffer(), OfferDTO.type.rent.ordinal()); //rent type is 2 commented at database
 
         Map<String, Object> rentingOfferParameters =new ObjectMapper().convertValue(rentingOffer, Map.class);
         rentingOfferParameters.put("id", rentingOffer.getOffer().getId());
@@ -82,7 +90,7 @@ public class OfferDAOimp implements OfferDAO {
 
     @Override
     public boolean addSellingOffer(SellDTO sellingOffer) {
-        addOffer(sellingOffer.getOffer(), 0); //sell type is 0 commented at database
+        addOffer(sellingOffer.getOffer(), OfferDTO.type.sell.ordinal()); //sell type is 0 commented at database
 
         Map<String, Object> sellingOfferParameters =new ObjectMapper().convertValue(sellingOffer, Map.class);
         sellingOfferParameters.put("id", sellingOffer.getOffer().getId());
@@ -91,6 +99,126 @@ public class OfferDAOimp implements OfferDAO {
             "INSERT INTO OFFER_SELL VALUES (:id, :price)", sellingOfferParameters);
 
         return false;
+    }
+    
+    
+    private final RowMapper<ExchangeDTO> exchangeRowMapper = (resultSet, rowNum) -> {
+        ExchangeDTO exchange = new ExchangeDTO();
+        
+        OfferDTO offer = offerRowMapper(resultSet,rowNum);
+        exchange.setOffer(offer);
+
+        exchange.setNegotiationPrice(resultSet.getLong("price"));
+
+        return exchange;
+    };
+
+    private final RowMapper<SellDTO> sellRowMapper = (resultSet, rowNum) -> {
+        SellDTO sell = new SellDTO();
+        
+        OfferDTO offer = offerRowMapper(resultSet,rowNum);
+        sell.setOffer(offer);
+
+        sell.setPrice(resultSet.getLong("price"));
+
+        return sell;
+    };
+
+    private final RowMapper<RentDTO> rentRowMapper = (resultSet, rowNum) -> {
+        RentDTO rent = new RentDTO();
+        
+        OfferDTO offer = offerRowMapper(resultSet,rowNum);
+        rent.setOffer(offer);
+
+        rent.setPricePerDay(resultSet.getLong("price"));
+
+        return rent;
+    };
+
+    private final OfferDTO offerRowMapper(ResultSet resultSet,Integer rowNum)
+    throws SQLException{
+        /*
+            ID
+            TYPE
+            CLIENT_ID
+            BOOK_ID
+            STATE_TEXT
+            OFFER_END_TIME
+            PRICE
+            MAXIMUM_RENT_TIME
+        */
+
+        OfferDTO offer = new OfferDTO();
+
+        // set offer attributes
+        offer.setId(resultSet.getLong("ID"));
+
+        ClientDTO client = new ClientDTO();
+        client.setId(resultSet.getLong("client_id"));
+        //NOTE should i add client data
+        offer.setClient(client);
+        
+        State state = new State();
+        state.setText(resultSet.getString("STATE_TEXT"));
+        offer.setState(state);
+
+        // offer.setAvailable(available); //TODO check end date
+
+        BookDTO book = new BookDTO();
+        book.setId(resultSet.getLong("book_id"));
+        offer.setBook(book);
+
+        return offer;
+    };
+
+    public ExchangeDTO findExchangeOfferById(long id){
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+        namedParameters.addValue("type", OfferDTO.type.exchange.ordinal());
+        
+
+        return this.namedParameterJdbcTemplate.queryForObject(
+            "select * from offer_full where id = :id and type = :type"
+         ,namedParameters ,exchangeRowMapper);
+    }
+    
+    public SellDTO findSellOfferById(long id){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+
+        return this.namedParameterJdbcTemplate.queryForObject(
+            "select * from offer_full where type = "+OfferDTO.type.sell.ordinal()+" & id = :id"
+         ,namedParameters ,sellRowMapper);
+    }
+    
+    public RentDTO findRentOfferById(long id){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+        return this.namedParameterJdbcTemplate.queryForObject(
+            "select * from offer_full where type = "+OfferDTO.type.exchange.ordinal()+" & id = :id"
+         ,namedParameters ,rentRowMapper);
+    }
+
+    public Map<String,Object> findOfferById(long id){
+        Map<String,Object> offerMap = new HashMap<String,Object>();
+
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+        int type = this.namedParameterJdbcTemplate.queryForObject("select type from offer where id = :id", namedParameters, int.class);
+
+        if (type == OfferDTO.type.exchange.ordinal())
+        {
+            ExchangeDTO exchangeDTO = findExchangeOfferById(id);
+            offerMap.put("exchange", exchangeDTO);
+        }
+        
+        if (type == OfferDTO.type.sell.ordinal()){
+            SellDTO sellDTO = findSellOfferById(id);
+            offerMap.put("sell", sellDTO);
+        }
+    
+        if (type == OfferDTO.type.rent.ordinal()){
+            RentDTO rentDTO = findRentOfferById(id);
+            offerMap.put("rent", rentDTO);
+        }
+        
+            return offerMap;
     }
 
 }

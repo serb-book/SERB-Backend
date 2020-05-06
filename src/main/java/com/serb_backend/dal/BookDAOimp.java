@@ -74,7 +74,7 @@ public class BookDAOimp /* implements BookDAO */ {
         //TODO add rest of offer properties
         String offers_id_list[] = resultSet.getString("offer_id").split(",");
         String offers_type_list[] = resultSet.getString("offer_type").split(",");
-        String offers_price_list[] = resultSet.getString("offer_price").split(",");
+        // String offers_price_list[] = resultSet.getString("offer_price").split(",");
 
         ArrayList<RentDTO> rent_offers = new ArrayList<RentDTO>();
         ArrayList<ExchangeDTO> exchange_offers = new ArrayList<ExchangeDTO>();
@@ -84,7 +84,7 @@ public class BookDAOimp /* implements BookDAO */ {
             try {
                 Long offer_id = Long.parseLong(offers_id_list[i]);
                 Integer offer_type = Integer.parseInt(offers_type_list[i]);
-                Integer offer_price = Integer.parseInt(offers_type_list[i]);
+                //Integer offer_price = Integer.parseInt(offers_type_list[i]);
 
                 OfferDTO offer = new OfferDTO();
                 offer.setId(offer_id);
