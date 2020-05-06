@@ -28,17 +28,5 @@ public class Address {
 		return address;
 	}
 
-
-
-	public Address(String country, String city, String government, String street, double longitude, double latitude) {
-		super();
-		this.country = country;
-		this.city = city;
-		this.government = government;
-		this.street = street;
-		this.longitude = longitude;
-		this.latitude = latitude;
-	}
-
 	
 }

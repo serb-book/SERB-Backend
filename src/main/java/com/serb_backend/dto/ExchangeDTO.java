@@ -1,6 +1,7 @@
 package com.serb_backend.dto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.github.javafaker.Faker;
 import static io.qala.datagen.RandomShortApi.*;
@@ -8,7 +9,7 @@ import static io.qala.datagen.RandomShortApi.*;
 import lombok.Data;
 @Data
 public class ExchangeDTO {
-	private ArrayList<String> categoriesOfInterest;
+	private HashSet<String> categoriesOfInterest;
 	private float negotiationPrice;
 	private OfferDTO offer;
 	
@@ -23,7 +24,7 @@ public class ExchangeDTO {
 
 		exchange.offer = offer;
 
-		exchange.categoriesOfInterest = new ArrayList<String>();
+		exchange.categoriesOfInterest = new HashSet<String>();
 		if (bool()){
 			exchange.categoriesOfInterest.add(faker.book().genre());
 			if(bool()){exchange.categoriesOfInterest.add(faker.book().genre());}

@@ -25,7 +25,7 @@ public class AccountDTO {
 
 		account.id = Math.abs(Long());
 		account.username = faker.name().firstName();
-		account.password = alphanumeric(8, 12);
+		account.password = alphanumeric(8, 12); // TODO: this should be hashed 
 		account.Email = alphanumeric(4, 8) + "@" +  english(4,8) + ".com";
 		account.phoneNumbers = new ArrayList<String>();
 		if (weighedTrue(.9)) {
