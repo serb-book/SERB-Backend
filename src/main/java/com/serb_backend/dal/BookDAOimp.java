@@ -1,7 +1,9 @@
 package com.serb_backend.dal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -55,7 +57,7 @@ public class BookDAOimp /* implements BookDAO */ {
         book.setDescription(resultSet.getString("DESCRIPTION"));
         
         String authors[] = resultSet.getString("authors").split(",");
-        ArrayList<String> authorsList = new ArrayList<String>();
+        Set<String> authorsList = new HashSet<String>();
         for (String author : authors) {
             authorsList.add(author);
         }
