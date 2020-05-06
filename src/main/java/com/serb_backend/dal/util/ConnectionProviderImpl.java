@@ -22,10 +22,8 @@ public class ConnectionProviderImpl implements ConnectionProvider {
 	}
 
 	@Override
-	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores)
-	throws SQLException{
+	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores){
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		// dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		dataSource.setUrl(jdbcUrl);
 		dataSource.setUsername(username);
 		dataSource.setPassword(passsword);

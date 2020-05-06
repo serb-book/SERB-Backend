@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 public class BookDAOimp /* implements BookDAO */ {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
     @Autowired
     public BookDAOimp(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -36,12 +37,12 @@ public class BookDAOimp /* implements BookDAO */ {
             namedParameters);
 
         for (String authorName : book.getAuthors()) {
-            MapSqlParameterSource auth_par = new MapSqlParameterSource("auth_name", authorName);
+            MapSqlParameterSource authParam = new MapSqlParameterSource("auth_name", authorName);
             
-            auth_par.addValue("id", book.getId());
+            authParam.addValue("id", book.getId());
             
             this.namedParameterJdbcTemplate.update(
-            "insert into BOOK_AUTHORES VALUES (:auth_name, :id)",auth_par);
+            "insert into BOOK_AUTHORES VALUES (:auth_name, :id)",authParam);
         }   
         return true;
     }
@@ -54,11 +55,11 @@ public class BookDAOimp /* implements BookDAO */ {
         book.setDescription(resultSet.getString("DESCRIPTION"));
         
         String authors[] = resultSet.getString("authors").split(",");
-        ArrayList<String> authors_list = new ArrayList<String>();
+        ArrayList<String> authorsList = new ArrayList<String>();
         for (String author : authors) {
-            authors_list.add(author);
+            authorsList.add(author);
         }
-        book.setAuthors(authors_list);
+        book.setAuthors(authorsList);
         
         book.setISBN(resultSet.getString("ISBN"));
         book.setTitle(resultSet.getString("TITLE"));

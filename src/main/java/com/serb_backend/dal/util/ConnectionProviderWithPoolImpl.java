@@ -71,10 +71,9 @@ public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 		config.addDataSourceProperty("driverClassName", "oracle.jdbc.driver.OracleDriver");
 		
 	}
-
+	
 	@Override
-	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores)
-			throws SQLException {
+	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores){
 		config.setJdbcUrl(jdbcUrl);
 		config.setUsername(username);
 		config.setPassword(passsword);
@@ -84,14 +83,13 @@ public class ConnectionProviderWithPoolImpl implements ConnectionProvider {
 
 	@Autowired
 	private Environment env;
+	
 
 	@Bean
 	public DataSource dataSource(){
-		config.setJdbcUrl(env.getProperty("database.jdbc-url"));
-		config.setUsername(env.getProperty("database.username"));
-		config.setPassword(env.getProperty("database.password"));
-		setMiscDataSourceProperties(Integer.parseInt(env.getProperty("database.hikari.cores")));
-		return new HikariDataSource(config);
-
+		return getDataSource(env.getProperty("database.jdbc-url"),
+							env.getProperty("database.username"),
+							env.getProperty("database.password"),
+							Integer.parseInt(env.getProperty("database.hikari.cores")));
 	}
 }

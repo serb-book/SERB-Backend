@@ -9,6 +9,5 @@ public interface ConnectionProvider {
 			throws SQLException;
 	public Connection getConnection(String username, String passsword, int numberOfCores)
 			throws SQLException;
-	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores)
-			throws SQLException;
+	public DataSource getDataSource(String jdbcUrl, String username, String passsword, int numberOfCores);
 }
