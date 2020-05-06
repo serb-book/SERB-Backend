@@ -25,21 +25,29 @@ public interface AccountDAO {
 	/**
 	 * @param token
 	 * @param email
-	 * @return if sending done successfully
 	 */
-	boolean sendRegisteringConfirmationEmail(String token, String email);
+	void sendRegisteringConfirmationEmail(String token, String email);
 	/**
 	 * Note: takes the same token as sendRegisteringConfirmationEmail
 	 * to create a user
 	 * @param token
-	 * @return if operation went successfully
 	 */
-	boolean createUser(String token);
+	void createUser(String token);
 	/**
 	 * update the non null values of Account
 	 * @param tocken
 	 * @param account
-	 * @return
 	 */
-	boolean updateUser(String tocken, AccountDTO account);
+	void updateUser(String tocken, AccountDTO account);
+	/**
+	 * 
+	 * @param account
+	 */
+	void saveAccount(AccountDTO account);
+	/**
+	 * 
+	 * @param id
+	 */
+	void grantSuperUserPriviliges(Long id);
+	
 }
