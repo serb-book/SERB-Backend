@@ -46,7 +46,7 @@ public class FillData {
                 OfferDTO offer = OfferDTO.random(client, book);
                 switch (integer(1, 3)) {
                     case 1:
-                        offerRepo.addExchangingOffer(ExchangeDTO.random(offer));
+                        offerRepo.addExchangingOffer(ExchangeDTO.random(offer,offeredBooks.subList(0, offeredBooks.size()/2)));
                         break;
                     case 2:
                         offerRepo.addRentingOffer(RentDTO.random(offer));

@@ -10,12 +10,16 @@ package com.serb_backend.dal;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.serb_backend.dto.ExchangeDTO;
+import com.serb_backend.dto.OfferDTO;
 import com.serb_backend.dto.RentDTO;
 import com.serb_backend.dto.SellDTO;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OfferDAO {
+	
+	void addOffer(OfferDTO offer,int type);
+	
 	/**
 	 * @param sellingOffer
 	 * @return if operation was done successfully

@@ -5,14 +5,17 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.serb_backend.dto.BookDTO;
 import com.serb_backend.dto.ExchangeDTO;
 import com.serb_backend.dto.OfferDTO;
 import com.serb_backend.dto.RentDTO;
 import com.serb_backend.dto.SellDTO;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,7 +29,7 @@ public class OfferDAOimp implements OfferDAO {
 
     }
 
-
+    @Override
     public void addOffer(OfferDTO offer,int type){
         Map<String, Object> OfferParameters =new ObjectMapper().convertValue(offer, Map.class);
         
@@ -53,7 +56,18 @@ public class OfferDAOimp implements OfferDAO {
         this.namedParameterJdbcTemplate.update(
             "INSERT INTO OFFER_EXCHANGE VALUES (:id, :negotiationPrice)", exchangeOfferParameters);
         
-        //  TODO add interstes
+        // TODO implement the other cases
+        int intersetsLength= exchangeOffer.getInterests().size();
+        SqlParameterSource idNamedParameter[] = new SqlParameterSource[intersetsLength];
+        for (int i = 0 ; i< intersetsLength; i++ ) {
+        	Map<String, Long> parameter = new HashedMap<String, Long>();
+        	parameter.put("offer_id", exchangeOffer.getOffer().getId());
+        	parameter.put("book_id", exchangeOffer.getInterests().get(i).getId());
+        	idNamedParameter[i] = new MapSqlParameterSource(parameter);
+        }
+        this.namedParameterJdbcTemplate.batchUpdate(
+        		"INSERT INTO OFFER_EXCHANGE_INTEREST_INBOOK VALUES(:book_id,:offer_id)",
+        		idNamedParameter);
         return true;
     }
 
