@@ -66,58 +66,7 @@ public class BookDAOimp /* implements BookDAO */ {
         book.setISBN(resultSet.getString("ISBN"));
         book.setTitle(resultSet.getString("TITLE"));
 
-        
-        
-        //offers 
-        //TODO add rest of offer properties
-        String offersIdList[] = resultSet.getString("offer_id").split(",");
-        String offersTypeList[] = resultSet.getString("offer_type").split(",");
-        //FIXME No use
-        String offers_price_list[] = resultSet.getString("offer_price").split(",");
-
-        ArrayList<RentDTO> rentOffers = new ArrayList<RentDTO>();
-        ArrayList<ExchangeDTO> exchangeOffers = new ArrayList<ExchangeDTO>();
-        ArrayList<SellDTO> sellOffers = new ArrayList<SellDTO>();
-        
-        for (int i = 0; i < offersIdList.length; i++) {
-            try {
-                Long offer_id = Long.parseLong(offersIdList[i]);
-                Integer offer_type = Integer.parseInt(offersTypeList[i]);
-                Integer offer_price = Integer.parseInt(offersTypeList[i]);
-
-                OfferDTO offer = new OfferDTO();
-                offer.setId(offer_id);
-                // offer.setState(state);
-
-                switch (offer_type){
-                    case 0: //sell
-                        SellDTO sellDTO = new SellDTO();
-                        sellDTO.setOffer(offer);
-                        sellOffers.add(sellDTO);        
-                        break;
-                    case 1: //exchange
-                        ExchangeDTO exchangeDTO = new ExchangeDTO();
-                        exchangeDTO.setOffer(offer);
-                        exchangeOffers.add(exchangeDTO);
-                        break;
-                    case 2: //rent
-                        RentDTO rentDTO = new RentDTO();
-                        rentDTO.setOffer(offer);
-                        rentOffers.add(rentDTO);
-                        break;
-                    default:
-                        break;
-                    }
-            } catch (Exception e) {
-                //TODO: handle exception
-                // offer_type not valid only accept 0,1,2
-                // offer doesn't exist offer_type null
-            }
-        }
-        book.setRent_offers(rentOffers);
-        book.setExchange_offers(exchangeOffers);
-        book.setSell_offers(sellOffers);
-
+        // FIXME no image in database
         // book.setImage(resultSet.getString(columnLabel));
         return book;
     };

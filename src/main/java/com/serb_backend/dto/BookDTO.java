@@ -18,9 +18,6 @@ public class BookDTO {
 	private String ISBN;
 	private String title;
 	private String image;
-	private List<ExchangeDTO> exchange_offers;
-	private List<SellDTO> sell_offers;
-	private List<RentDTO> rent_offers;
 
 	
 	public BookDTO(){}
