@@ -2,7 +2,6 @@ package com.serb_backend.dal;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -47,7 +46,7 @@ public class OfferDAOimp implements OfferDAO {
         
 
         this.namedParameterJdbcTemplate.update(
-            "INSERT INTO OFFER VALUES (:id, NULL, :type, NULL, :clientID, :bookID, :state_text)"
+            "INSERT INTO OFFER VALUES (:id, :type, NULL, :clientID, :bookID, :state_text)"
             , OfferParameters);
 
     }
@@ -182,55 +181,35 @@ public class OfferDAOimp implements OfferDAO {
 
         return offer;
     };
-
-    public ExchangeDTO findExchangeOfferById(long id){
+    
+    public Object findOfferById(long id){
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        namedParameters.addValue("type", OfferDTO.type.exchange.ordinal());
+        int type_num = this.namedParameterJdbcTemplate.queryForObject(
+                    "select type from offer where id = :id", namedParameters, int.class);
         
+        OfferDTO.type type = OfferDTO.type.values()[type_num];
+        namedParameters.addValue("type", type.ordinal());
+         
+        String sql = "select * from offer_full where id = :id and type = :type";
 
-        return this.namedParameterJdbcTemplate.queryForObject(
-            "select * from offer_full where id = :id and type = :type"
-         ,namedParameters ,exchangeRowMapper);
-    }
-    
-    public SellDTO findSellOfferById(long id){
-        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-
-        return this.namedParameterJdbcTemplate.queryForObject(
-            "select * from offer_full where type = "+OfferDTO.type.sell.ordinal()+" & id = :id"
-         ,namedParameters ,sellRowMapper);
-    }
-    
-    public RentDTO findRentOfferById(long id){
-        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        return this.namedParameterJdbcTemplate.queryForObject(
-            "select * from offer_full where type = "+OfferDTO.type.exchange.ordinal()+" & id = :id"
-         ,namedParameters ,rentRowMapper);
-    }
-
-    public Map<String,Object> findOfferById(long id){
-        Map<String,Object> offerMap = new HashMap<String,Object>();
-
-        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        int type = this.namedParameterJdbcTemplate.queryForObject("select type from offer where id = :id", namedParameters, int.class);
-
-        if (type == OfferDTO.type.exchange.ordinal())
+        if (type == OfferDTO.type.exchange)
         {
-            ExchangeDTO exchangeDTO = findExchangeOfferById(id);
-            offerMap.put("exchange", exchangeDTO);
+            return this.namedParameterJdbcTemplate.queryForObject(
+            sql ,namedParameters ,exchangeRowMapper); 
         }
         
-        if (type == OfferDTO.type.sell.ordinal()){
-            SellDTO sellDTO = findSellOfferById(id);
-            offerMap.put("sell", sellDTO);
+        if (type == OfferDTO.type.sell){
+            return this.namedParameterJdbcTemplate.queryForObject(
+            sql ,namedParameters ,sellRowMapper); 
         }
     
-        if (type == OfferDTO.type.rent.ordinal()){
-            RentDTO rentDTO = findRentOfferById(id);
-            offerMap.put("rent", rentDTO);
+        if (type == OfferDTO.type.rent){
+            return this.namedParameterJdbcTemplate.queryForObject(
+            sql ,namedParameters ,rentRowMapper); 
         }
+        else 
+            return null;
         
-            return offerMap;
     }
 
 }
