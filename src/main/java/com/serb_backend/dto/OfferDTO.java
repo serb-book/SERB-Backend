@@ -11,6 +11,12 @@ public class OfferDTO {
 	private State state;
 	private ClientDTO client;
 	private BookDTO book;
+
+	public enum type {
+		sell,
+		exchange,
+		rent		
+	}
 	
 	public OfferDTO(){}
 

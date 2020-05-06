@@ -13,7 +13,7 @@ public class AccountDTO {
 	private String username;
 	// TODO: This is going to be a hashed string
 	private String password;
-	private @Getter long id;
+	private long id;
 	private ArrayList<String> phoneNumbers;
 	private String profilePictureURL;
 	private String Email;
