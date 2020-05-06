@@ -2,6 +2,7 @@ package com.serb_backend.dto;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.github.javafaker.Faker;
 import static io.qala.datagen.RandomShortApi.*;
@@ -9,7 +10,7 @@ import static io.qala.datagen.RandomShortApi.*;
 import lombok.Data;
 @Data
 public class ExchangeDTO {
-	private HashSet<String> categoriesOfInterest;
+	private Set<String> categoriesOfInterest;
 	private float negotiationPrice;
 	private OfferDTO offer;
 	
