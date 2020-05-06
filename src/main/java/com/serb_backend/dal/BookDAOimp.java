@@ -43,7 +43,7 @@ public class BookDAOimp /* implements BookDAO */ {
             
             this.namedParameterJdbcTemplate.update(
             "insert into BOOK_AUTHORES VALUES (:auth_name, :id)",authParam);
-        }   
+        }
         return true;
     }
 
@@ -68,19 +68,20 @@ public class BookDAOimp /* implements BookDAO */ {
         
         //offers 
         //TODO add rest of offer properties
-        String offers_id_list[] = resultSet.getString("offer_id").split(",");
-        String offers_type_list[] = resultSet.getString("offer_type").split(",");
+        String offersIdList[] = resultSet.getString("offer_id").split(",");
+        String offersTypeList[] = resultSet.getString("offer_type").split(",");
+        //FIXME No use
         String offers_price_list[] = resultSet.getString("offer_price").split(",");
 
-        ArrayList<RentDTO> rent_offers = new ArrayList<RentDTO>();
-        ArrayList<ExchangeDTO> exchange_offers = new ArrayList<ExchangeDTO>();
-        ArrayList<SellDTO> sell_offers = new ArrayList<SellDTO>();
+        ArrayList<RentDTO> rentOffers = new ArrayList<RentDTO>();
+        ArrayList<ExchangeDTO> exchangeOffers = new ArrayList<ExchangeDTO>();
+        ArrayList<SellDTO> sellOffers = new ArrayList<SellDTO>();
         
-        for (int i = 0; i < offers_id_list.length; i++) {
+        for (int i = 0; i < offersIdList.length; i++) {
             try {
-                Long offer_id = Long.parseLong(offers_id_list[i]);
-                Integer offer_type = Integer.parseInt(offers_type_list[i]);
-                Integer offer_price = Integer.parseInt(offers_type_list[i]);
+                Long offer_id = Long.parseLong(offersIdList[i]);
+                Integer offer_type = Integer.parseInt(offersTypeList[i]);
+                Integer offer_price = Integer.parseInt(offersTypeList[i]);
 
                 OfferDTO offer = new OfferDTO();
                 offer.setId(offer_id);
@@ -90,17 +91,17 @@ public class BookDAOimp /* implements BookDAO */ {
                     case 0: //sell
                         SellDTO sellDTO = new SellDTO();
                         sellDTO.setOffer(offer);
-                        sell_offers.add(sellDTO);        
+                        sellOffers.add(sellDTO);        
                         break;
                     case 1: //exchange
                         ExchangeDTO exchangeDTO = new ExchangeDTO();
                         exchangeDTO.setOffer(offer);
-                        exchange_offers.add(exchangeDTO);
+                        exchangeOffers.add(exchangeDTO);
                         break;
                     case 2: //rent
                         RentDTO rentDTO = new RentDTO();
                         rentDTO.setOffer(offer);
-                        rent_offers.add(rentDTO);
+                        rentOffers.add(rentDTO);
                         break;
                     default:
                         break;
@@ -111,20 +112,15 @@ public class BookDAOimp /* implements BookDAO */ {
                 // offer doesn't exist offer_type null
             }
         }
-        book.setRent_offers(rent_offers);
-        book.setExchange_offers(exchange_offers);
-        book.setSell_offers(sell_offers);
-
-        
-
-
+        book.setRent_offers(rentOffers);
+        book.setExchange_offers(exchangeOffers);
+        book.setSell_offers(sellOffers);
 
         // book.setImage(resultSet.getString(columnLabel));
-    
         return book;
     };
     
-    public String select_books_query(String fillter){
+    public String selectBooksQuery(String fillter){
     /*
     book_all view:
         ID
@@ -146,7 +142,7 @@ public class BookDAOimp /* implements BookDAO */ {
     public List<BookDTO> findAllBooks(){
 
         return this.namedParameterJdbcTemplate.query(
-            select_books_query(""),
+            selectBooksQuery(""),
             bookRowMapper);
     }
 
@@ -154,21 +150,21 @@ public class BookDAOimp /* implements BookDAO */ {
 	public List<BookDTO> findBookByAuthor(String author) {
 
         return this.namedParameterJdbcTemplate.query(
-            select_books_query(" WHERE LOWER(authors) like LOWER(\'%"+author+"%\')")
+            selectBooksQuery(" WHERE LOWER(authors) like LOWER(\'%"+author+"%\')")
             , bookRowMapper);
     }
 
     public List<BookDTO> findBookByTitle(String title) {
 
         return this.namedParameterJdbcTemplate.query(
-            select_books_query(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\')")
+            selectBooksQuery(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\')")
             , bookRowMapper);
     }
 
     public List<BookDTO> findBookByTitleAndAuthor(String title,String author) {
 
         return this.namedParameterJdbcTemplate.query(
-            select_books_query(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\') and LOWER(authors) like LOWER(\'%"+author+"%\')")
+            selectBooksQuery(" WHERE LOWER(TITLE) like LOWER(\'%"+title+"%\') and LOWER(authors) like LOWER(\'%"+author+"%\')")
             , bookRowMapper);
     }
     List<BookDTO> findBookByCategory(String categoryName){
@@ -184,14 +180,14 @@ public class BookDAOimp /* implements BookDAO */ {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 
         return this.namedParameterJdbcTemplate.queryForObject(
-            select_books_query("where id = :id"), namedParameters,  bookRowMapper);
+            selectBooksQuery("where id = :id"), namedParameters,  bookRowMapper);
     }
 
     public BookDTO findBookByIsbn(String isbn){
         SqlParameterSource namedParameters = new MapSqlParameterSource("isbn", isbn);
 
         return this.namedParameterJdbcTemplate.queryForObject(
-            select_books_query("where isbn = :isbn"), namedParameters,  bookRowMapper);
+            selectBooksQuery("where isbn = :isbn"), namedParameters,  bookRowMapper);
     }
     
 }
