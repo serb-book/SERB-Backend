@@ -37,8 +37,13 @@ public class BookController {
      * //TODO use paging 
     */
     @GetMapping("")
-    public String getAllBooks() throws JsonProcessingException {
-        List<BookDTO> books = book_repo.findAllBooks();
+    public String getAllBooks(@RequestParam(required = false) Integer rowNum,
+    		@RequestParam(required = false) Integer pageIndex) throws JsonProcessingException {
+    	List<BookDTO> books = new ArrayList<BookDTO>();
+    	if(pageIndex == null)
+        	 books = book_repo.findAllBooks();
+    	else
+    		books =  book_repo.findAllBooks(rowNum,pageIndex);
         return objectMapper.writeValueAsString(books);  
         
     }

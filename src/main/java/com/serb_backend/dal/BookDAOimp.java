@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import com.serb_backend.dal.util.Pagination;
 import com.serb_backend.dto.BookDTO;
 import com.serb_backend.dto.ExchangeDTO;
 import com.serb_backend.dto.OfferDTO;
@@ -93,7 +94,14 @@ public class BookDAOimp /* implements BookDAO */ {
     public List<BookDTO> findAllBooks(){
 
         return this.namedParameterJdbcTemplate.query(
-            selectBooksQuery(""),
+                Pagination.paginateQuery(selectBooksQuery("")),
+            bookRowMapper);
+    }
+    
+    public List<BookDTO> findAllBooks(int rowNum ,int pageIndex){
+
+        return this.namedParameterJdbcTemplate.query(
+            Pagination.paginateQuery(selectBooksQuery(""), rowNum, pageIndex),
             bookRowMapper);
     }
 
